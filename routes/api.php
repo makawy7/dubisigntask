@@ -1,8 +1,7 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\Api\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,5 +14,5 @@ use App\Http\Controllers\UserController;
 |
 */
 
-Route::post('/user/create', [UserController::class, 'store']);
+Route::post('/user/store', [UserController::class, 'store']);
 Route::post('/user/certification', [UserController::class, 'uploadCertification']);
