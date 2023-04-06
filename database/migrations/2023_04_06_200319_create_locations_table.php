@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('locations', function (Blueprint $table) {
             $table->id();
-            $table->enum('user_type', ['standard', 'certified', 'locationed'])->default('standard');
-            $table->string('username')->unique();
-            $table->string('email')->unique();
-            $table->text('bio')->nullable();
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->string("map_location");
+            $table->date("date_of_birth");
             $table->timestamps();
         });
     }
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('locations');
     }
 };
