@@ -26,10 +26,10 @@ class CreateUserRequest extends FormRequest
             'username' => ['required', 'string', 'unique:users,username'],
             'email' => ['required', 'string', 'email', 'unique:users,email'],
             'bio' => ['nullable', 'string'],
-            'map_location' => ['required_if:type,locationed', 'string'],
-            'date_of_birth' => ['required_if:type,locationed', 'date'],
-            'cert_name' => ['required_if:type,certified', 'string'],
-            'file_path' => ['required_if:type,certified', 'string'],
+            'map_location' => ['required_if:user_type,locationed', 'string'],
+            'date_of_birth' => ['required_if:user_type,locationed', 'date'],
+            'cert_name' => ['required_if:user_type,certified', 'string'],
+            'file_path' => ['required_if:user_type,certified', 'string'],
         ];
     }
 }

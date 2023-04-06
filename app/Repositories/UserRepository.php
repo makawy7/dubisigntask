@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use Carbon\Carbon;
 use App\Models\User;
 use App\Interfaces\UserRepositoryInterface;
 
@@ -24,7 +25,7 @@ class UserRepository implements UserRepositoryInterface
     {
         $user->location()->create([
             'map_location' => $location,
-            'date_of_birth' => $birthDate
+            'date_of_birth' => Carbon::parse($birthDate)->toDateString()
         ]);
     }
 }
