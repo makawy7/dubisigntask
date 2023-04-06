@@ -16,3 +16,4 @@ use App\Http\Controllers\UserController;
 */
 
 Route::post('/user/create', [UserController::class, 'store']);
+Route::post('/user/certification', [UserController::class, 'uploadCertification']);
