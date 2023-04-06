@@ -11,8 +11,20 @@ class UserRepository implements UserRepositoryInterface
     {
         return User::create($data);
     }
-    public function getUsers()
+
+    public function attachCertification(User $user, string $name, string $filePath)
     {
-        return User::all();
+        $user->certification()->create([
+            'cert_name' => $name,
+            'file_path' => $filePath
+        ]);
+    }
+
+    public function attachLocation(User $user, string $location, string $birthDate)
+    {
+        $user->location()->create([
+            'map_location' => $location,
+            'date_of_birth' => $birthDate
+        ]);
     }
 }
