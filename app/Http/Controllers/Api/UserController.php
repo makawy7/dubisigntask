@@ -22,9 +22,11 @@ class UserController extends Controller
         $user = $this->userRepository->createUser($request->only(['type', 'username', 'email', 'bio']));
         if ($request->user_type === 'locationed') {
             $this->userRepository->attachLocation($user, $request->map_location, $request->date_of_birth);
+            $user->load('location');
         }
         if ($request->user_type === 'certified') {
             $this->userRepository->attachCertification($user, $request->cert_name, $request->file_path);
+            $user->load('certification');
         }
         return response()->json(['message' => 'User created successfully', 'user' => $user], 201);
     }
