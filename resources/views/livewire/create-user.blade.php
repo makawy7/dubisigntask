@@ -1,13 +1,18 @@
-<div class="max-w-6xl mx-auto mt-6 lg:mt-20 space-y-6">
+@push('styles')
+    <link rel="stylesheet" href="/css/flatpickr.min.css">
+    <style>
+        [x-cloak] {
+            display: none;
+        }
+    </style>
+@endpush
+<div x-data="{ userType: 'standard' }" class="max-w-6xl mx-auto mt-6 lg:mt-20 space-y-6">
     <form wire:submit.prevent="createUser" action="#" method="POST" enctype="multipart/form-data">
         <div>
             <a href="/" class="text-blue-600">Back Home</a>
-            <h3 class="text-lg leading-6 font-medium text-gray-900 mt-2">
-                Edit Post
+            <h3 class="text-lg  font-medium text-gray-900 mt-2">
+                Create New User
             </h3>
-            <p class="mt-1 max-w-2xl text-sm leading-5 text-gray-500">
-                You can edit your post here.
-            </p>
             @if ($successMessage)
                 <div class="rounded-md bg-green-50 p-4 mt-8">
                     <div class="flex">
@@ -41,13 +46,13 @@
             @endif
         </div>
         <div class="mt-6 sm:mt-5">
-            <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+            <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-gray-200 sm:pt-5">
                 <label for="username" class="block text-sm font-medium leading-5 text-gray-700 sm:mt-px sm:pt-2">
                     Usename
                 </label>
                 <div class="mt-1 sm:mt-0 sm:col-span-2">
                     <div class="max-w-lg rounded-md shadow-sm sm:max-w-xs">
-                        <input wire:model.lazy="username" id="username" name="username"
+                        <input wire:model.lazy="username" id="username"
                             class="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                             value="{{ $username }}">
                         @error('username')
@@ -56,13 +61,13 @@
                     </div>
                 </div>
             </div>
-            <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+            <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-gray-200 sm:pt-5">
                 <label for="email" class="block text-sm font-medium leading-5 text-gray-700 sm:mt-px sm:pt-2">
                     Email
                 </label>
                 <div class="mt-1 sm:mt-0 sm:col-span-2">
                     <div class="max-w-lg rounded-md shadow-sm sm:max-w-xs">
-                        <input wire:model.lazy="email" id="email" name="email"
+                        <input wire:model.lazy="email" id="email"
                             class="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                             value="{{ $email }}">
                         @error('email')
@@ -72,13 +77,13 @@
                 </div>
             </div>
 
-            <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+            <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-gray-200 sm:pt-5">
                 <label for="bio" class="block text-sm font-medium leading-5 text-gray-700 sm:mt-px sm:pt-2">
                     Bio
                 </label>
                 <div class="mt-1 sm:mt-0 sm:col-span-2">
                     <div class="max-w-lg flex rounded-md shadow-sm">
-                        <textarea wire:model.lazy="bio" id="bio" name="bio" rows="5"
+                        <textarea wire:model.lazy="bio" id="bio" rows="5"
                             class="form-textarea block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5">{{ $bio }}</textarea>
                     </div>
                     @error('bio')
@@ -87,13 +92,13 @@
                 </div>
             </div>
 
-            <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+            <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-gray-200 sm:pt-5">
                 <label for="user_type" class="block text-sm font-medium leading-5 text-gray-700 sm:mt-px sm:pt-2">
                     User Type
                 </label>
                 <div class="mt-1 sm:mt-0 sm:col-span-2">
                     <div class="max-w-lg rounded-md shadow-sm sm:max-w-s">
-                        <select wire:model.defer="user_type" id="user_type"
+                        <select x-model="userType" wire:model.defer="user_type" id="user_type"
                             class="form-select block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5">
                             <option value="standard" {{ $user_type === 'standard' ? 'selected' : '' }}>Standard</option>
                             <option value="locationed" {{ $user_type === 'locationed' ? 'selected' : '' }}>Locationed
@@ -108,10 +113,60 @@
                 </div>
             </div>
 
-            <div class="mt-6  sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
-                <label for="photo" class="block text-sm leading-5 font-medium text-gray-700 sm:mt-px sm:pt-2">
-                    Cover Photo
+            <div x-show="userType === 'certified'">
+                <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-gray-200 sm:pt-5">
+                    <label for="username" class="block text-sm font-medium leading-5 text-gray-700 sm:mt-px sm:pt-2">
+                        Certification Name
+                    </label>
+                    <div class="mt-1 sm:mt-0 sm:col-span-2">
+                        <div class="max-w-lg rounded-md shadow-sm sm:max-w-xs">
+                            <input id="username"
+                                class="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                                value="{{ $username }}">
+                            @error('username')
+                                <p class="text-red-500 mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-6  sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-gray-200 sm:pt-5">
+                    <label for="photo" class="block text-sm leading-5 font-medium text-gray-700 sm:mt-px sm:pt-2">
+                        Certification File
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div x-show="userType === 'locationed'">
+            <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-gray-200 sm:pt-5">
+                <label for="map_location" class="block text-sm font-medium leading-5 text-gray-700 sm:mt-px sm:pt-2">
+                    Map Location
                 </label>
+                <div class="mt-1 sm:mt-0 sm:col-span-2">
+                    <div class="max-w-lg rounded-md shadow-sm sm:max-w-md h-72 relative">
+                        <div wire:ignore id="map" class="w-full h-full absolute top-0 left-0"></div>
+                    </div>
+                    @error('map_location')
+                        <p class="text-red-500 mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+            </div>
+
+            <div
+                class="sm:grid
+                        sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-gray-200 sm:pt-5">
+                <label for="datepicker" class="block text-sm font-medium leading-5 text-gray-700 sm:mt-px sm:pt-2">
+                    Birth Date
+                </label>
+                <div class="mt-1 sm:mt-0 sm:col-span-2">
+                    <div class="max-w-lg rounded-md shadow-sm sm:max-w-xs">
+                        <input wire:model.lazy="date_of_birth" type="text" id="datepicker"
+                            placeholder="Select a date">
+                    </div>
+                    @error('date_of_birth')
+                        <p class="text-red-500 mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
             </div>
         </div>
 
@@ -137,3 +192,50 @@
 
     </form>
 </div>
+
+
+@push('scripts')
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCxq2b1q-gksbcZzb0Fha354XiSmDUm8pI&callback=initMap"></script>
+    <script src="/js/flatpickr.js"></script>
+    <script>
+        flatpickr("#datepicker");
+
+        function initMap() {
+            let map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 14,
+                center: {
+                    lat: {{ $defaultLat }},
+                    lng: {{ $defaultLng }}
+                },
+                gestureHandling: 'greedy'
+            });
+
+            marker = new google.maps.Marker({
+                map: map,
+                draggable: true,
+                animation: google.maps.Animation.DROP,
+                position: {
+                    lat: {{ $defaultLat }},
+                    lng: {{ $defaultLng }}
+                },
+
+            });
+            marker.addListener('dragend', function() {
+                let position = marker.getPosition();
+                let lat = position.lat();
+                let lng = position.lng();
+                Livewire.emit('mapLocationChanged', lat, lng);
+            });
+            marker.addListener('click', toggleBounce);
+        }
+
+        function toggleBounce() {
+            if (marker.getAnimation() !== null) {
+                marker.setAnimation(null);
+            } else {
+                marker.setAnimation(google.maps.Animation.BOUNCE);
+            }
+        }
+    </script>
+@endpush

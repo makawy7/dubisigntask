@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Livewire Examples</title>
     <link rel="stylesheet" href="/css/main.css">
+    @stack('styles')
     <livewire:styles />
-
-    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.7.0/dist/alpine.min.js" defer></script>
+    <script src="/js/alpine.min.js" defer></script>
 
     <style>
         progress {
@@ -33,6 +33,7 @@
     </main>
 
     <livewire:scripts />
+    @stack('scripts')
 </body>
 
 </html>
