@@ -9,12 +9,12 @@ use App\Interfaces\UserRepositoryInterface;
 class UserController extends Controller
 {
 
+    public function index()
+    {
+        return view('index');
+    }
     public function create()
     {
         return view('users.create');
-    }
-    public function show()
-    {
-        return view('users.show');
     }
 }

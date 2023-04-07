@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
 
 /*
@@ -15,5 +14,5 @@ use App\Http\Controllers\UserController;
 |
 */
 
-Route::get('/', [HomeController::class, 'index']);
-Route::resource('/users', UserController::class)->only(['index', 'create', 'show']);
+Route::get('/', [UserController::class, 'index']);
+Route::get('/users/create', [UserController::class, 'create'])->name('users.create');

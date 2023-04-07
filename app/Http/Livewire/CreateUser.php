@@ -3,11 +3,13 @@
 namespace App\Http\Livewire;
 
 use Livewire\Component;
+use Livewire\WithFileUploads;
 use App\Repositories\UserRepository;
 use App\Interfaces\UserRepositoryInterface;
 
 class CreateUser extends Component
 {
+    use WithFileUploads;
     protected UserRepositoryInterface $userRepository;
     public $successMessage;
     public $username;
@@ -19,6 +21,10 @@ class CreateUser extends Component
     public $map_location;
     public $date_of_birth;
     protected $listeners = ['mapLocationChanged'];
+    public $cert_name;
+    public $file;
+    public $fileTmpUrl;
+    public $file_path;
     public $rules = [
         'user_type' => ['required', 'string', 'in:standard,certified,locationed'],
         'username' => ['required', 'string', 'unique:users,username'],
@@ -26,6 +32,9 @@ class CreateUser extends Component
         'bio' => ['nullable', 'string'],
         'map_location' => ['nullable', 'required_if:user_type,locationed', 'string'],
         'date_of_birth' => ['nullable', 'required_if:user_type,locationed', 'date'],
+        'cert_name' => ['nullable', 'required_if:user_type,certified', 'string'],
+        'file' =>  ['nullable', 'required_if:user_type,certified', 'mimes:jpeg,jpg,png,pdf', 'max:10240'],
+        'file_path' => ['nullable', 'required_if:user_type,certified', 'string'],
     ];
     public function __construct()
     {
@@ -50,6 +59,16 @@ class CreateUser extends Component
         $this->map_location = "{lat: $lat, lng: $lng}";
     }
 
+    public function updatedFile()
+    {
+        $this->validateOnly('file');
+        try {
+            $this->fileTmpUrl = $this->file->temporaryUrl();
+        } catch (\Exception $e) {
+            $this->fileTmpUrl = null;
+        }
+        $this->file_path = $this->file->store('certifications', 'public');
+    }
     public function createUser()
     {
         $this->validate();
@@ -62,6 +81,22 @@ class CreateUser extends Component
         if ($this->user_type === 'locationed') {
             $this->userRepository->attachLocation($user, $this->map_location, $this->date_of_birth);
         }
+        if ($this->user_type === 'certified') {
+            $this->userRepository->attachCertification($user, $this->cert_name, $this->file_path);
+        }
         $this->successMessage = 'User Created Successfully';
+        $this->resetForm();
+    }
+
+    private function resetForm()
+    {
+        $this->username = '';
+        $this->email = '';
+        $this->bio = '';
+        $this->fileTmpUrl = '';
+        $this->date_of_birth = '';
+        $this->cert_name = '';
+        $this->file = '';
+        $this->file_path = '';
     }
 }

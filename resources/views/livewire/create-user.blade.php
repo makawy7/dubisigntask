@@ -115,15 +115,15 @@
 
             <div x-show="userType === 'certified'">
                 <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-gray-200 sm:pt-5">
-                    <label for="username" class="block text-sm font-medium leading-5 text-gray-700 sm:mt-px sm:pt-2">
+                    <label for="cert_name" class="block text-sm font-medium leading-5 text-gray-700 sm:mt-px sm:pt-2">
                         Certification Name
                     </label>
                     <div class="mt-1 sm:mt-0 sm:col-span-2">
                         <div class="max-w-lg rounded-md shadow-sm sm:max-w-xs">
-                            <input id="username"
+                            <input wire:model.lazy="cert_name" id="cert_name"
                                 class="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"
-                                value="{{ $username }}">
-                            @error('username')
+                                value="{{ $cert_name }}">
+                            @error('cert_name')
                                 <p class="text-red-500 mt-1">{{ $message }}</p>
                             @enderror
                         </div>
@@ -133,6 +133,25 @@
                     <label for="photo" class="block text-sm leading-5 font-medium text-gray-700 sm:mt-px sm:pt-2">
                         Certification File
                     </label>
+                    <div class="mt-2 sm:mt-0 sm:col-span-2" x-data="{ isUploading: false, progress: 0 }"
+                        x-on:livewire-upload-start="isUploading = true"
+                        x-on:livewire-upload-finish="isUploading = false"
+                        x-on:livewire-upload-error="isUploading = false"
+                        x-on:livewire-upload-progress="progress = $event.detail.progress">
+                        <input wire:model="file" type="file">
+                        @error('file')
+                            <p class="text-red-500 mt-1">{{ $message }}</p>
+                        @enderror
+
+                        <!-- Progress Bar -->
+                        <div class="mt-4" x-show="isUploading">
+                            <progress max="100" x-bind:value="progress"></progress>
+                        </div>
+
+                        @if ($fileTmpUrl)
+                            <img src="{{ $fileTmpUrl }}" alt="cover image">
+                        @endif
+                    </div>
                 </div>
             </div>
         </div>
@@ -173,7 +192,7 @@
         <div class="mt-8 border-t border-gray-200 pt-5">
             <div class="flex justify-end">
                 <span class="ml-3 inline-flex rounded-md shadow-sm">
-                    <button type="submit"
+                    <button wire:loading.attr="disabled" wire:target="file" type="submit"
                         class="inline-flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out disabled:opacity-50">
                         <svg wire:loading wire:target="createUser" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
                             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
